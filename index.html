@@ -1,0 +1,666 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>1 prompt, 1 zdanie</title>
+<meta name="description" content="Codziennie od poniedziałku do piątku jeden projekt z jednego zdania, bez żadnych poprawek. Co wyjdzie, udostępniam.">
+<meta name="theme-color" content="#12110f">
+<link rel="canonical" href="https://1prompt1zdanie.vibemaster.pl/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pl_PL">
+<meta property="og:title" content="1 prompt, 1 zdanie">
+<meta property="og:description" content="Codziennie jeden projekt z jednego zdania, bez żadnych poprawek. Zobacz, co wyszło.">
+<meta property="og:url" content="https://1prompt1zdanie.vibemaster.pl/">
+<meta property="og:image" content="https://1prompt1zdanie.vibemaster.pl/galeria/dzien-3.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23ffb547'/%3E%3Ctext x='16' y='23' font-family='Arial' font-weight='700' font-size='19' text-anchor='middle' fill='%2312110f'%3E1%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    color-scheme: dark;
+    --bg: #12110f;
+    --bg-2: #171613;
+    --surface: #1c1b18;
+    --surface-2: #24221e;
+    --line: #2f2d28;
+    --line-2: #3d3a33;
+    --text: #f3f0e9;
+    --muted: #a7a297;
+    --dim: #6f6b62;
+    --accent: #ffb547;
+    --accent-2: #ff7a45;
+    --accent-ink: #15120c;
+    --radius: 16px;
+    --sans: "Space Grotesk", system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+    --ease: cubic-bezier(.2, .7, .2, 1);
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+      radial-gradient(1100px 620px at 85% -12%, rgba(255, 181, 71, .13), transparent 62%),
+      radial-gradient(800px 500px at -10% 30%, rgba(255, 122, 69, .06), transparent 60%),
+      var(--bg);
+    color: var(--text);
+    font: 17px/1.6 var(--sans);
+    overflow-x: hidden;
+  }
+  body.locked { overflow: hidden; }
+  a { color: inherit; }
+  button { font: inherit; color: inherit; }
+  img { max-width: 100%; }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 max(16px, env(safe-area-inset-left)); }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+
+  /* ---------- nawigacja ---------- */
+  .nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 20px 0; }
+  .brand { white-space: nowrap; display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 700; letter-spacing: -.01em; }
+  .brand i {
+    display: grid; place-items: center; width: 30px; height: 30px; border-radius: 8px;
+    background: var(--accent); color: var(--accent-ink); font: 700 16px/1 var(--sans); font-style: normal;
+  }
+  .nav-links { display: flex; gap: 6px; }
+  .nav-links a {
+    padding: 8px 12px; border-radius: 999px; text-decoration: none; font-size: 15px; color: var(--muted);
+    transition: color .2s, background .2s;
+  }
+  .nav-links a:hover { color: var(--text); background: var(--surface); }
+
+  /* ---------- hero ---------- */
+  .hero { display: grid; grid-template-columns: 1.05fr 1fr; gap: 56px; align-items: center; padding: 48px 0 64px; }
+  .kicker {
+    display: inline-flex; align-items: center; gap: 10px;
+    font: 500 13px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent);
+  }
+  .kicker::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px rgba(255, 181, 71, .18); animation: pulse 2.4s infinite; }
+  @keyframes pulse { 50% { box-shadow: 0 0 0 8px rgba(255, 181, 71, 0); } }
+  h1 {
+    margin: 18px 0 22px;
+    font-size: clamp(52px, 8.4vw, 112px);
+    line-height: .92;
+    letter-spacing: -.045em;
+    font-weight: 700;
+  }
+  h1 em {
+    font-style: normal;
+    background: linear-gradient(100deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .lead { max-width: 560px; margin: 0 0 30px; font-size: 20px; color: var(--muted); }
+  .lead strong { color: var(--text); font-weight: 500; }
+  .cta { display: flex; flex-wrap: wrap; gap: 12px; }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    min-height: 46px; padding: 0 18px; white-space: nowrap;
+    border-radius: 12px; border: 1px solid var(--line-2); background: transparent;
+    text-decoration: none; font-weight: 500; font-size: 15px; cursor: pointer;
+    transition: transform .2s var(--ease), background .2s, border-color .2s, filter .2s;
+  }
+  .btn:hover { border-color: var(--muted); background: var(--surface); }
+  .btn:active { transform: scale(.97); }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  .btn.primary:hover { filter: brightness(1.08); background: var(--accent); }
+  .btn svg { width: 16px; height: 16px; flex: none; }
+
+  /* terminal: zdanie → projekt */
+  .term {
+    position: relative;
+    border: 1px solid var(--line-2);
+    border-radius: 18px;
+    background: linear-gradient(180deg, var(--surface-2), var(--surface));
+    box-shadow: 0 40px 80px -30px rgba(0, 0, 0, .7), 0 0 0 1px rgba(255, 255, 255, .02) inset;
+    overflow: hidden;
+  }
+  .term::after {
+    content: ""; position: absolute; inset: -1px; border-radius: 18px; pointer-events: none;
+    background: linear-gradient(140deg, rgba(255, 181, 71, .35), transparent 35%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+    padding: 1px;
+  }
+  .term-bar { display: flex; align-items: center; gap: 7px; padding: 12px 16px; border-bottom: 1px solid var(--line); }
+  .term-bar i { width: 11px; height: 11px; border-radius: 50%; background: var(--line-2); }
+  .term-bar span { margin-left: 8px; font: 12.5px var(--mono); color: var(--dim); }
+  .term-body { padding: 18px 18px 18px; }
+  .term-label { font: 12px var(--mono); color: var(--dim); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 8px; }
+  .term-prompt { display: grid; margin: 0 0 16px; font: 15px/1.6 var(--mono); color: var(--text); }
+  .term-prompt > span { grid-area: 1 / 1; }
+  .term-prompt .ghost { visibility: hidden; }
+  .term-prompt .pfx { color: var(--accent); margin-right: 8px; }
+  .caret { display: inline-block; width: .55em; height: 1.1em; margin-left: 2px; vertical-align: -.18em; background: var(--accent); animation: blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .term-result {
+    position: relative; display: block; width: 100%; padding: 0; border: 0; border-radius: 12px; overflow: hidden;
+    aspect-ratio: 16 / 9; background: #0b0a09; cursor: pointer; text-align: left;
+  }
+  .term-result img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.06); transition: opacity .7s var(--ease), transform 1.6s var(--ease); }
+  .term-result.on img { opacity: 1; transform: scale(1); }
+  .term-result .cap {
+    position: absolute; left: 0; right: 0; bottom: 0; padding: 64px 16px 14px;
+    background: linear-gradient(transparent, rgba(0, 0, 0, .55) 40%, rgba(0, 0, 0, .9));
+    opacity: 0; transform: translateY(8px); transition: opacity .5s .25s, transform .5s .25s var(--ease);
+  }
+  .term-result.on .cap { opacity: 1; transform: none; }
+  .cap small { display: block; font: 12px var(--mono); color: var(--accent); letter-spacing: .04em; }
+  .cap b { display: block; font-size: 22px; line-height: 1.2; color: #fff; }
+  .term-result .wait { position: absolute; inset: 0; display: grid; place-items: center; font: 13px var(--mono); color: var(--dim); transition: opacity .3s; }
+  .term-result.on .wait { opacity: 0; }
+  .wait::before { content: ""; width: 26px; height: 26px; margin-bottom: 10px; border-radius: 50%; border: 2px solid var(--line-2); border-top-color: var(--accent); animation: spin .9s linear infinite; }
+  .wait { grid-auto-flow: row; align-content: center; justify-items: center; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .term-dots { display: flex; justify-content: center; gap: 8px; margin-top: 14px; }
+  .term-dots button { width: 28px; height: 4px; padding: 0; border: 0; border-radius: 4px; background: var(--line-2); cursor: pointer; }
+  .term-dots button[aria-current="true"] { background: var(--accent); }
+  .term-dots button::before { content: ""; display: block; height: 24px; margin-top: -10px; } /* większy cel dotyku */
+
+  /* ---------- liczby ---------- */
+  .stats {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden;
+    background: var(--line); gap: 1px;
+  }
+  .stat { background: var(--bg-2); padding: 22px 24px; }
+  .stat b { display: block; white-space: nowrap; font-size: clamp(26px, 3.6vw, 44px); line-height: 1; letter-spacing: -.03em; font-weight: 700; }
+  .stat span { display: block; margin-top: 8px; font-size: 14px; color: var(--muted); }
+  .stat:first-child b { color: var(--accent); }
+
+  /* ---------- sekcje ---------- */
+  section { padding: 72px 0 0; }
+  .sec-head { display: flex; align-items: end; justify-content: space-between; gap: 16px 24px; flex-wrap: wrap; margin-bottom: 24px; }
+  .sec-head h2 { margin: 0; font-size: clamp(28px, 4vw, 40px); line-height: 1.1; letter-spacing: -.025em; }
+  .sec-head p { margin: 6px 0 0; color: var(--muted); font-size: 16px; }
+
+  /* kalendarz */
+  .cal { display: grid; gap: 10px; }
+  .week { display: grid; grid-template-columns: 112px repeat(5, 1fr); gap: 10px; align-items: stretch; }
+  .week-label { display: flex; flex-direction: column; justify-content: center; font: 12.5px/1.5 var(--mono); color: var(--dim); }
+  .week-label b { color: var(--muted); font-weight: 500; }
+  .cell {
+    position: relative; aspect-ratio: 16 / 10; border-radius: 12px; overflow: hidden;
+    border: 1px dashed var(--line-2); background: transparent; padding: 0;
+    display: grid; place-items: center; font: 12px var(--mono); color: var(--dim);
+  }
+  .cell .wd { position: absolute; left: 9px; top: 7px; font: 11px var(--mono); letter-spacing: .06em; text-transform: uppercase; }
+  .cell.done { border: 1px solid var(--line); cursor: pointer; }
+  .cell.done img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .5s var(--ease); }
+  .cell.done::after { content: ""; position: absolute; inset: 0; background: linear-gradient(transparent 40%, rgba(0, 0, 0, .75)); }
+  .cell.done .wd { z-index: 1; color: #fff; text-shadow: 0 1px 6px rgba(0, 0, 0, .6); }
+  .cell.done .no { position: absolute; z-index: 1; right: 9px; bottom: 6px; font: 500 12px var(--mono); color: var(--accent); }
+  .cell.done:hover img { transform: scale(1.08); }
+  .cell.today { border: 1px solid var(--accent); color: var(--accent); box-shadow: 0 0 0 4px rgba(255, 181, 71, .1); }
+  .cell.today .wd { color: var(--accent); }
+  .cell.missed { border-style: solid; border-color: var(--line); background: repeating-linear-gradient(135deg, transparent 0 8px, rgba(255, 255, 255, .02) 8px 16px); }
+
+  /* filtry */
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    min-height: 38px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--line-2); background: transparent;
+    font-size: 14px; color: var(--muted); cursor: pointer; transition: all .2s;
+  }
+  .chip:hover { color: var(--text); border-color: var(--muted); }
+  .chip[aria-pressed="true"] { background: var(--text); border-color: var(--text); color: var(--bg); }
+  .chip small { margin-left: 6px; font: 12px var(--mono); opacity: .7; }
+
+  /* karty */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 24px; }
+  .card {
+    display: flex; flex-direction: column;
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden;
+    transition: transform .35s var(--ease), border-color .35s, box-shadow .35s;
+  }
+  .card:hover { transform: translateY(-4px); border-color: var(--line-2); box-shadow: 0 30px 60px -30px rgba(0, 0, 0, .8); }
+  .thumb { position: relative; display: block; width: 100%; padding: 0; border: 0; aspect-ratio: 16 / 9; background: #000; overflow: hidden; cursor: pointer; }
+  .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .6s var(--ease); }
+  .card:hover .thumb img { transform: scale(1.05); }
+  .tag {
+    position: absolute; top: 12px; padding: 6px 9px; border-radius: 7px;
+    font: 500 11.5px/1 var(--mono); letter-spacing: .05em;
+  }
+  .tag.day { left: 12px; background: var(--accent); color: var(--accent-ink); }
+  .tag.kat { right: 12px; background: rgba(0, 0, 0, .55); color: #fff; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+  .card .body { display: flex; flex-direction: column; flex: 1; padding: 18px 20px 20px; }
+  .date { font: 13px var(--mono); color: var(--dim); }
+  .card h3 { margin: 4px 0 6px; font-size: 25px; line-height: 1.15; letter-spacing: -.015em; }
+  .desc { margin: 0 0 16px; font-size: 15.5px; color: var(--muted); }
+  .quote {
+    position: relative; margin: 0 0 16px; padding: 12px 14px 12px 16px;
+    border-left: 3px solid var(--accent); border-radius: 0 10px 10px 0;
+    background: rgba(255, 181, 71, .065);
+    font: 13.5px/1.62 var(--mono); color: #e9e4d8;
+  }
+  .meta { display: flex; flex-wrap: wrap; gap: 6px 14px; margin: auto 0 16px; font: 12.5px var(--mono); color: var(--dim); }
+  .meta span::before { content: "● "; color: var(--line-2); }
+  .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  /* zasady */
+  .rules { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 0; padding: 0; list-style: none; counter-reset: r; }
+  .rules li { padding: 22px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--bg-2); color: var(--muted); font-size: 15px; counter-increment: r; }
+  .rules li::before { content: "0" counter(r); display: block; margin-bottom: 18px; font: 500 12px var(--mono); color: var(--accent); }
+  .rules b { display: block; margin-bottom: 6px; color: var(--text); font-size: 18px; font-weight: 500; }
+  .suffix { margin-top: 16px; padding: 18px 20px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--bg-2); }
+  .suffix p { margin: 0 0 8px; font-size: 14px; color: var(--muted); }
+  .suffix code { display: block; font: 14px/1.65 var(--mono); color: var(--text); white-space: normal; }
+
+  footer { margin-top: 96px; border-top: 1px solid var(--line); padding: 28px 0 calc(36px + env(safe-area-inset-bottom)); font-size: 15px; color: var(--muted); }
+  footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 24px; }
+  footer a { color: var(--text); text-decoration-color: var(--accent); text-underline-offset: 3px; }
+
+  /* pojawianie się przy przewijaniu */
+  .rv { opacity: 0; transform: translateY(18px); transition: opacity .7s var(--ease), transform .7s var(--ease); }
+  .rv.in { opacity: 1; transform: none; }
+
+  /* ---------- okno szczegółów ---------- */
+  dialog {
+    width: min(860px, calc(100% - 32px)); max-height: calc(100dvh - 48px);
+    padding: 0; border: 1px solid var(--line-2); border-radius: 20px;
+    background: var(--surface); color: var(--text); overflow: auto; overscroll-behavior: contain;
+  }
+  dialog::backdrop { background: rgba(8, 7, 6, .72); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+  dialog[open] { animation: pop .35s var(--ease); }
+  @keyframes pop { from { opacity: 0; transform: translateY(16px) scale(.98); } }
+  .dlg-img { position: relative; aspect-ratio: 16 / 9; max-height: 46vh; width: 100%; background: #000; }
+  .dlg-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .dlg-close {
+    position: absolute; top: 12px; right: 12px; width: 42px; height: 42px; border-radius: 50%;
+    border: 0; background: rgba(0, 0, 0, .6); color: #fff; cursor: pointer; display: grid; place-items: center;
+    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  }
+  .dlg-close svg { width: 18px; height: 18px; }
+  .dlg-body { padding: 22px 26px 28px; }
+  .dlg-body h2 { outline: none; margin: 4px 0 8px; font-size: clamp(28px, 4vw, 38px); line-height: 1.1; letter-spacing: -.025em; }
+  .dlg-body .desc { font-size: 16.5px; }
+  .facts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; margin: 20px 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--line); }
+  .facts div { background: var(--bg-2); padding: 12px 14px; }
+  .facts dt { font: 11.5px var(--mono); color: var(--dim); text-transform: uppercase; letter-spacing: .06em; }
+  .facts dd { margin: 4px 0 0; font-size: 15px; font-weight: 500; }
+  .full { position: relative; margin: 0 0 20px; }
+  .full-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+  .full-head span { font: 12px var(--mono); color: var(--dim); text-transform: uppercase; letter-spacing: .08em; }
+  .copy { min-height: 34px; padding: 0 12px; border-radius: 8px; border: 1px solid var(--line-2); background: transparent; font-size: 13px; cursor: pointer; color: var(--muted); }
+  .copy:hover { color: var(--text); border-color: var(--muted); }
+  .full pre {
+    margin: 0; padding: 14px 16px; border-radius: 12px; background: #0f0e0c; border: 1px solid var(--line);
+    font: 13.5px/1.65 var(--mono); color: #e9e4d8; white-space: pre-wrap; word-break: break-word;
+  }
+  .full pre mark { background: none; color: var(--accent); }
+  .dlg-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+  .dlg-actions .btn { flex: 1 1 180px; }
+
+  /* ---------- responsywność ---------- */
+  @media (max-width: 980px) {
+    .hero { grid-template-columns: 1fr; gap: 36px; padding: 24px 0 48px; }
+    .rules { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 640px) {
+    body { font-size: 16px; }
+    .nav { padding: 14px 0; }
+    .nav-links a { padding: 8px 10px; font-size: 14px; }
+    .nav-links .hide-s { display: none; }
+    h1 { margin: 14px 0 16px; }
+    .lead { font-size: 18px; margin-bottom: 24px; }
+    .cta .btn { flex: 1 1 auto; }
+    .term-body { padding: 14px; }
+    .term-prompt { font-size: 13.5px; }
+    .stats { grid-template-columns: 1fr 1fr; }
+    .stat { padding: 16px 18px; }
+    section { padding-top: 56px; }
+    .week { grid-template-columns: repeat(5, 1fr); gap: 6px; }
+    .week-label { grid-column: 1 / -1; flex-direction: row; gap: 8px; margin-top: 6px; }
+    .cell { border-radius: 8px; aspect-ratio: 1; }
+    .cell .wd { left: 6px; top: 4px; font-size: 10px; }
+    .cell.done .no { right: 6px; bottom: 3px; font-size: 10.5px; }
+    .grid { grid-template-columns: 1fr; gap: 18px; }
+    .card h3 { font-size: 23px; }
+    .rules { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .rules li { padding: 16px; font-size: 14px; }
+    .rules li::before { margin-bottom: 10px; }
+    .rules b { font-size: 16px; }
+    dialog {
+      width: 100%; max-width: 100%; max-height: 92dvh; margin: auto 0 0;
+      border-radius: 20px 20px 0 0; border-bottom: 0;
+    }
+    dialog[open] { animation: sheet .4s var(--ease); }
+    @keyframes sheet { from { transform: translateY(100%); } }
+    .dlg-body { padding: 18px 16px calc(24px + env(safe-area-inset-bottom)); }
+    .facts { grid-template-columns: 1fr 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .rv { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <nav class="nav" aria-label="Główna">
+    <a class="brand" href="#"><i>1</i>1 prompt, 1 zdanie</a>
+    <div class="nav-links">
+      <a class="hide-s" href="#projekty">Projekty</a>
+      <a class="hide-s" href="#zasady">Zasady</a>
+      <a href="https://vibemaster.pl">vibemaster.pl</a>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div>
+      <div class="kicker">Eksperyment trwa · od 19.10.2026</div>
+      <h1>1 prompt,<br><em>1 zdanie</em></h1>
+      <p class="lead">Codziennie od poniedziałku do piątku tworzę jeden projekt z <strong>jednego zdania</strong>. Bez poprawek, bez dopytywania, bez drugiej próby. Co wyjdzie, udostępniam.</p>
+      <div class="cta">
+        <a class="btn primary" href="#projekty">Zobacz projekty
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M8 3v10M3.5 8.5 8 13l4.5-4.5"/></svg></a>
+        <a class="btn" href="#zasady">Jak to działa</a>
+      </div>
+    </div>
+
+    <div class="term" aria-label="Zdanie i projekt, który z niego powstał">
+      <div class="term-bar"><i></i><i></i><i></i><span id="term-title">claude · dzień 03</span></div>
+      <div class="term-body">
+        <div class="term-label">Prompt</div>
+        <p class="term-prompt"><span class="ghost" id="ghost" aria-hidden="true"></span><span><span class="pfx">›</span><span id="typed"></span><span class="caret" aria-hidden="true"></span></span></p>
+        <button class="term-result" id="term-result" type="button">
+          <span class="wait">model pracuje…</span>
+          <img id="term-img" alt="">
+          <span class="cap"><small id="term-meta"></small><b id="term-name"></b></span>
+        </button>
+        <div class="term-dots" id="term-dots" role="group" aria-label="Wybierz dzień"></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="stats rv" id="stats"></div>
+
+  <section id="kalendarz" aria-labelledby="h-kal">
+    <div class="sec-head rv">
+      <div>
+        <h2 id="h-kal">Kalendarz</h2>
+        <p>Od poniedziałku do piątku, jeden dzień – jeden projekt.</p>
+      </div>
+    </div>
+    <div class="cal rv" id="cal"></div>
+  </section>
+
+  <section id="projekty" aria-labelledby="h-proj">
+    <div class="sec-head rv">
+      <div>
+        <h2 id="h-proj">Projekty</h2>
+        <p>Oryginały, dokładnie takie, jakie dał jeden prompt.</p>
+      </div>
+      <div class="chips" id="chips" role="group" aria-label="Filtruj projekty"></div>
+    </div>
+    <div class="grid" id="grid"></div>
+    <noscript><p>Lista projektów wymaga JavaScriptu. Wszystkie są też w <a href="https://github.com/bartibo/jeden-prompt">repozytorium na GitHubie</a>.</p></noscript>
+  </section>
+
+  <section id="zasady" aria-labelledby="h-zas">
+    <div class="sec-head rv">
+      <div>
+        <h2 id="h-zas">Zasady</h2>
+        <p>Cztery reguły, które obowiązują każdego dnia.</p>
+      </div>
+    </div>
+    <ul class="rules rv">
+      <li><b>Jedno zdanie</b>Pomysł opisany jednym zdaniem plus stały dopisek. Nic więcej.</li>
+      <li><b>Zero iteracji</b>W sesji jest dokładnie jedna moja wiadomość. Nie poprawiam i nie dopytuję.</li>
+      <li><b>Decyduje model</b>Gatunek, wygląd, mechaniki, technologia i struktura plików.</li>
+      <li><b>Wynik jak jest</b>Publikuję oryginał razem z promptem. Dobry czy słaby.</li>
+    </ul>
+    <div class="suffix rv">
+      <p>Stały dopisek po zdaniu z pomysłem (pisownia oryginalna):</p>
+      <code>Ty podejmujsze wszystkie decyzje. Projekt ma być super i dać się odpalić w przeglądarce. O nic mnie nie pytaj tylko stwórz gotowy projekty.</code>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <div class="wrap">
+    <span>Bartłomiej Borowczyk · <a href="https://vibemaster.pl">vibemaster.pl</a></span>
+    <span><a href="https://github.com/bartibo/jeden-prompt">Kod i prompty na GitHubie</a></span>
+  </div>
+</footer>
+
+<dialog id="dlg" aria-labelledby="dlg-title"></dialog>
+
+<script>
+/* Nowy dzień: dopisz obiekt na KOŃCU listy. Miniatura: galeria/dzien-N.jpg (960×540, zrzut pierwszego ekranu).
+   `zdanie` to samo zdanie z pomysłem, `prompt` to pełna wiadomość dosłownie. */
+const PROJEKTY = [
+  {
+    n: 1, data: '2026-10-19', godz: '21:20', min: 35, model: 'Claude Opus 5.5', kat: 'Gra',
+    folder: '1-meteoryty-gra-opus5_5', akcja: 'Zagraj',
+    tytul: 'Tarcza Ziemi',
+    opis: 'Obrona Ziemi przed meteorytami: działo orbitalne, tarcza, EMP, satelity i sklep z ulepszeniami między falami.',
+    alt: 'Ziemia z tarczą energetyczną i satelitami na tle gwiazd',
+    zdanie: 'Stwórz proszę grę w któej gracz ma za zadanie obronić ziemię przed spadającymi metorytami.',
+    prompt: 'Stwórz proszę grę w któej gracz ma za zadanie obronić ziemię przed spadającymi metorytami. Ty podejmujsze wszystkie decyzje. Projekt ma być super i dać się odpalić w przeglądarce. O nic mnie nie pytaj tylko stwórz gotowy projekty. (Umieść go w folderze 1-meteoryty-gra-opus5_5)'
+  },
+  {
+    n: 2, data: '2026-10-20', godz: '10:01', min: 75, model: 'Claude Opus 5.5', kat: 'Symulacja 3D',
+    folder: '2-trzesienie-ziemi-interaktywne-opus5_5', akcja: 'Uruchom',
+    tytul: 'Sejsmo·Lab',
+    opis: 'Symulator trzęsień ziemi 3D. Ustawiasz magnitudę i patrzysz, co dzieje się z miastem, gruntem i wybrzeżem.',
+    alt: 'Nadmorskie miasto 3D z wieżowcami i domami, widok z góry',
+    zdanie: 'Stwórz proszę interaktywną animacją 3D, w które gracz może testować różne wielkości trzesięnia ziemi w taki spośób by zobaczył efekt trzęsienia ziemi zależny od siły zjawiska.',
+    prompt: 'Stwórz proszę interaktywną animacją 3D, w które gracz może testować różne wielkości trzesięnia ziemi w taki spośób by zobaczył efekt trzęsienia ziemi zależny od siły zjawiska.\nTy podejmujsze wszystkie decyzje. Projekt ma być super i dać się odpalić w przeglądarce. O nic mnie nie pytaj tylko stwórz gotowy projekty. (Umieść go w folderze 2-trzesienie-ziemi-interaktywne-opus5_5)'
+  },
+  {
+    n: 3, data: '2026-10-21', godz: '11:42', min: 60, model: 'Claude Opus 5.5', kat: 'Gra',
+    folder: '3-kapibary-bijatyka-opus5_5', akcja: 'Zagraj',
+    tytul: 'Kapibara Kombat',
+    opis: 'Bijatyka kapibar dla dwóch graczy na jednej klawiaturze. Cztery postacie, ciosy specjalne, combosy i wykończenia.',
+    alt: 'Dwie kapibary w strojach do walki naprzeciw siebie w dojo w bambusach',
+    zdanie: 'Stwórz proszę grę typu street fighter / mortal kombat w której dwie kapybary walczą między sobą, a gracze grają na jednej klawaiturze i mają bardzo dużo ciosów i combo do wykorzsytania.',
+    prompt: 'Stwórz proszę grę typu street fighter / mortal kombat w której dwie kapybary walczą między sobą, a gracze grają na jednej klawaiturze i mają bardzo dużo ciosów i combo do wykorzsytania.\nTy podejmujsze wszystkie decyzje. Projekt ma być super i dać się odpalić w przeglądarce. O nic mnie nie pytaj tylko stwórz gotowy projekty. Umieść go w folderze dedykowanym i nazwij go zgodnie z konwencją nazewnictwa stosowaną we wczesniejszych projektach.'
+  }
+];
+
+const START = '2026-10-19';
+const REPO = 'https://github.com/bartibo/jeden-prompt/tree/main/';
+const RUCH = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+let obs = null;
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const nr = n => String(n).padStart(2, '0');
+const img = p => `galeria/dzien-${p.n}.jpg`;
+const dzien = iso => { const [y, m, d] = iso.split('-').map(Number); return new Date(y, m - 1, d); };
+const iso = d => `${d.getFullYear()}-${nr(d.getMonth() + 1)}-${nr(d.getDate())}`;
+const DNI = ['nd.', 'pon.', 'wt.', 'śr.', 'czw.', 'pt.', 'sob.'];
+const dataPL = s => { const d = dzien(s); return `${DNI[d.getDay()]} ${nr(d.getDate())}.${nr(d.getMonth() + 1)}.${d.getFullYear()}`; };
+const czas = m => m < 60 ? `${m} min` : `${Math.floor(m / 60)} h${m % 60 ? ' ' + (m % 60) + ' min' : ''}`;
+const IKONA_GRAJ = '<svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4 2.8v10.4c0 .6.7 1 1.2.6l8-5.2a.7.7 0 0 0 0-1.2l-8-5.2C4.7 1.8 4 2.2 4 2.8Z"/></svg>';
+
+const poNowosci = [...PROJEKTY].sort((a, b) => b.n - a.n);
+
+/* ---------- liczby ---------- */
+{
+  const lacznie = PROJEKTY.reduce((s, p) => s + p.min, 0);
+  const modele = new Set(PROJEKTY.map(p => p.model));
+  $('#stats').innerHTML = [
+    [PROJEKTY.length, PROJEKTY.length === 1 ? 'projekt' : PROJEKTY.length < 5 ? 'projekty' : 'projektów'],
+    ['≈ ' + czas(lacznie), 'łączny czas pracy modelu'],
+    ['0', 'poprawek i drugich prób'],
+    [modele.size === 1 ? [...modele][0].replace('Claude ', '') : modele.size, modele.size === 1 ? 'model (Claude)' : 'modele']
+  ].map(([b, s]) => `<div class="stat"><b>${esc(b)}</b><span>${esc(s)}</span></div>`).join('');
+}
+
+/* ---------- kalendarz ---------- */
+{
+  const wgDaty = Object.fromEntries(PROJEKTY.map(p => [p.data, p]));
+  const dzis = iso(new Date());
+  const ostatni = PROJEKTY.reduce((m, p) => p.data > m ? p.data : m, START);
+  const koniec = dzien(dzis > ostatni ? dzis : ostatni);
+  const pon = d => { const x = new Date(d); x.setDate(x.getDate() - ((x.getDay() + 6) % 7)); return x; };
+  const tygodnie = [];
+  for (let t = pon(dzien(START)); t <= koniec; t.setDate(t.getDate() + 7)) tygodnie.push(new Date(t));
+  const WD = ['pn', 'wt', 'śr', 'cz', 'pt'];
+  const krotko = d => d.toLocaleDateString('pl-PL', { day: 'numeric', month: 'short' });
+  $('#cal').innerHTML = tygodnie.reverse().map((t, i) => {
+    const pt = new Date(t); pt.setDate(pt.getDate() + 4);
+    const komorki = WD.map((wd, k) => {
+      const d = new Date(t); d.setDate(d.getDate() + k);
+      const s = iso(d), p = wgDaty[s];
+      if (p) return `<button class="cell done" type="button" data-n="${p.n}" aria-label="Dzień ${p.n}: ${esc(p.tytul)}, ${dataPL(s)}">
+          <img src="${img(p)}" alt="" loading="lazy"><span class="wd">${wd}</span><span class="no">#${nr(p.n)}</span></button>`;
+      if (s === dzis) return `<div class="cell today"><span class="wd">${wd}</span>dziś</div>`;
+      if (s < dzis && s >= START) return `<div class="cell missed" title="${dataPL(s)}: brak projektu"><span class="wd">${wd}</span></div>`;
+      return `<div class="cell"><span class="wd">${wd}</span></div>`;
+    }).join('');
+    return `<div class="week"><div class="week-label"><b>Tydzień ${tygodnie.length - i}</b>${krotko(t)} – ${krotko(pt)}</div>${komorki}</div>`;
+  }).join('');
+  $('#cal').addEventListener('click', e => { const c = e.target.closest('.cell.done'); if (c) otworz(+c.dataset.n); });
+}
+
+/* ---------- karty i filtry ---------- */
+let filtr = 'Wszystkie';
+function karty() {
+  const lista = poNowosci.filter(p => filtr === 'Wszystkie' || p.kat === filtr);
+  $('#grid').innerHTML = lista.map(p => `
+    <article class="card rv">
+      <button class="thumb" type="button" data-n="${p.n}" aria-label="Szczegóły: ${esc(p.tytul)}">
+        <img src="${img(p)}" alt="${esc(p.alt)}" width="960" height="540" loading="lazy">
+        <span class="tag day">DZIEŃ ${nr(p.n)}</span><span class="tag kat">${esc(p.kat)}</span>
+      </button>
+      <div class="body">
+        <div class="date">${dataPL(p.data)}</div>
+        <h3>${esc(p.tytul)}</h3>
+        <p class="desc">${esc(p.opis)}</p>
+        <blockquote class="quote">${esc(p.zdanie)}</blockquote>
+        <div class="meta"><span>${esc(p.model)}</span><span>ok. ${czas(p.min)}</span></div>
+        <div class="actions">
+          <a class="btn primary" href="${p.folder}/">${IKONA_GRAJ}${p.akcja}</a>
+          <button class="btn" type="button" data-n="${p.n}">Szczegóły</button>
+        </div>
+      </div>
+    </article>`).join('');
+  pokazuj();
+}
+{
+  const kat = ['Wszystkie', ...new Set(PROJEKTY.map(p => p.kat))];
+  const ile = k => k === 'Wszystkie' ? PROJEKTY.length : PROJEKTY.filter(p => p.kat === k).length;
+  const chips = $('#chips');
+  if (kat.length > 2) {
+    chips.innerHTML = kat.map(k => `<button class="chip" type="button" aria-pressed="${k === filtr}" data-k="${esc(k)}">${esc(k)}<small>${ile(k)}</small></button>`).join('');
+    chips.addEventListener('click', e => {
+      const b = e.target.closest('.chip'); if (!b) return;
+      filtr = b.dataset.k;
+      chips.querySelectorAll('.chip').forEach(c => c.setAttribute('aria-pressed', c === b));
+      karty();
+    });
+  }
+  karty();
+  $('#grid').addEventListener('click', e => { const b = e.target.closest('button[data-n]'); if (b) otworz(+b.dataset.n); });
+}
+
+/* ---------- pojawianie się przy przewijaniu ---------- */
+function pokazuj() {
+  const el = document.querySelectorAll('.rv:not(.in)');
+  if (!RUCH || !('IntersectionObserver' in window)) { el.forEach(e => e.classList.add('in')); return; }
+  obs ??= new IntersectionObserver(w => w.forEach(x => { if (x.isIntersecting) { x.target.classList.add('in'); obs.unobserve(x.target); } }), { rootMargin: '0px 0px -8% 0px' });
+  el.forEach(e => obs.observe(e));
+}
+pokazuj();
+
+/* ---------- okno szczegółów ---------- */
+const dlg = $('#dlg');
+function otworz(n) {
+  const p = PROJEKTY.find(x => x.n === n); if (!p) return;
+  const reszta = p.prompt.slice(p.zdanie.length);
+  dlg.innerHTML = `
+    <div class="dlg-img">
+      <img src="${img(p)}" alt="${esc(p.alt)}">
+      <button class="dlg-close" type="button" aria-label="Zamknij"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m3 3 10 10M13 3 3 13"/></svg></button>
+    </div>
+    <div class="dlg-body">
+      <div class="date">Dzień ${nr(p.n)} · ${dataPL(p.data)}</div>
+      <h2 id="dlg-title" tabindex="-1">${esc(p.tytul)}</h2>
+      <p class="desc">${esc(p.opis)}</p>
+      <dl class="facts">
+        <div><dt>Model</dt><dd>${esc(p.model)}</dd></div>
+        <div><dt>Czas pracy</dt><dd>ok. ${czas(p.min)}</dd></div>
+        <div><dt>Start</dt><dd>godz. ${esc(p.godz)}</dd></div>
+        <div><dt>Poprawki</dt><dd>0</dd></div>
+      </dl>
+      <div class="full">
+        <div class="full-head"><span>Pełny prompt, dosłownie</span><button class="copy" type="button">Kopiuj</button></div>
+        <pre><mark>${esc(p.zdanie)}</mark>${esc(reszta)}</pre>
+      </div>
+      <div class="dlg-actions">
+        <a class="btn primary" href="${p.folder}/">${IKONA_GRAJ}${p.akcja}</a>
+        <a class="btn" href="${REPO}${p.folder}">Kod na GitHubie</a>
+      </div>
+    </div>`;
+  dlg.querySelector('.dlg-close').onclick = () => dlg.close();
+  dlg.querySelector('.copy').onclick = async e => {
+    const b = e.currentTarget;
+    try { await navigator.clipboard.writeText(p.prompt); b.textContent = 'Skopiowano ✓'; }
+    catch { getSelection().selectAllChildren(dlg.querySelector('pre')); b.textContent = 'Zaznaczono'; }
+    setTimeout(() => (b.textContent = 'Kopiuj'), 1800);
+  };
+  if (!dlg.open) dlg.showModal();
+  dlg.scrollTop = 0;
+  dlg.querySelector('h2').focus({ preventScroll: true });
+  document.body.classList.add('locked');
+  history.replaceState(null, '', '#dzien-' + p.n);
+}
+dlg.addEventListener('close', () => {
+  document.body.classList.remove('locked');
+  if (/^#dzien-\d+$/.test(location.hash)) history.replaceState(null, '', location.pathname + location.search);
+});
+dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
+const zHasha = () => { const m = location.hash.match(/^#dzien-(\d+)$/); if (m) otworz(+m[1]); };
+addEventListener('hashchange', zHasha);
+zHasha();
+
+/* ---------- terminal: zdanie → projekt ---------- */
+{
+  const typed = $('#typed'), res = $('#term-result'), im = $('#term-img');
+  const dots = $('#term-dots');
+  let i = 0, timer = 0, gen = 0;
+  $('#ghost').textContent = '› ' + PROJEKTY.reduce((a, p) => p.zdanie.length > a.length ? p.zdanie : a, '') + '█';
+  dots.innerHTML = poNowosci.map((p, k) => `<button type="button" aria-label="Dzień ${p.n}: ${esc(p.tytul)}" data-k="${k}"></button>`).join('');
+  poNowosci.forEach(p => { const x = new Image(); x.src = img(p); });
+  const czekaj = ms => new Promise(r => { timer = setTimeout(r, ms); });
+
+  async function pokaz(k) {
+    const moj = ++gen;
+    clearTimeout(timer);
+    i = k;
+    const p = poNowosci[k];
+    dots.querySelectorAll('button').forEach((b, j) => b.setAttribute('aria-current', j === k));
+    $('#term-title').textContent = `claude · dzień ${nr(p.n)} · ${dataPL(p.data)}`;
+    res.classList.remove('on');
+    res.setAttribute('aria-label', `Szczegóły: ${p.tytul}`);
+    res.onclick = () => otworz(p.n);
+    if (RUCH) {
+      typed.textContent = '';
+      await czekaj(350); if (moj !== gen) return;
+      for (let c = 1; c <= p.zdanie.length; c++) {
+        typed.textContent = p.zdanie.slice(0, c);
+        await czekaj(p.zdanie[c - 1] === ' ' ? 34 : 22 + Math.random() * 22); if (moj !== gen) return;
+      }
+      await czekaj(700); if (moj !== gen) return;
+    } else typed.textContent = p.zdanie;
+    im.src = img(p); im.alt = p.alt;
+    $('#term-name').textContent = p.tytul;
+    $('#term-meta').textContent = `DZIEŃ ${nr(p.n)} · ${p.kat.toUpperCase()} · OK. ${czas(p.min).toUpperCase()}`;
+    res.classList.add('on');
+    await czekaj(RUCH ? 4200 : 7000); if (moj !== gen) return;
+    if (!document.hidden) pokaz((i + 1) % poNowosci.length);
+    else document.addEventListener('visibilitychange', () => moj === gen && pokaz((i + 1) % poNowosci.length), { once: true });
+  }
+  dots.addEventListener('click', e => { const b = e.target.closest('button'); if (b) pokaz(+b.dataset.k); });
+  pokaz(0);
+}
+</script>
+</body>
+</html>

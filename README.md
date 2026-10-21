@@ -4,6 +4,8 @@ Codziennie od poniedziałku do piątku tworzę jeden projekt z **jednego zdania*
 
 Autor: Bartłomiej Borowczyk · [vibemaster.pl](https://vibemaster.pl)
 
+**Galeria z podglądem wszystkich projektów: [1prompt1zdanie.vibemaster.pl](https://1prompt1zdanie.vibemaster.pl)**
+
 ## Na czym polega eksperyment
 
 - **Jedno zdanie.** Opisuję pomysł jednym zdaniem i dokładam stały dopisek (poniżej). Nic więcej.
@@ -32,9 +34,10 @@ Pełny prompt, godzina i szczegóły są w README każdego projektu.
 
 ## Jak uruchomić
 
-Wejdź do folderu projektu i kliknij dwa razy `index.html`. Projekty to czyste HTML, CSS i JavaScript, bez budowania i bez serwera.
+Najprościej w [galerii](https://1prompt1zdanie.vibemaster.pl): przycisk „Zagraj” otwiera projekt w przeglądarce. Lokalnie: wejdź do folderu projektu i kliknij dwa razy `index.html`. Projekty to czyste HTML, CSS i JavaScript, bez budowania i bez serwera.
 
 ## Narzędzie i konwencja
 
 - Wszystkie projekty powstają w [Claude Code](https://claude.com/claude-code) (model podany w tabeli).
 - Nazwa folderu: `numer-temat-model`, np. `1-meteoryty-gra-opus5_5`.
+- Galeria to `index.html` w głównym folderze (lista projektów w tablicy `PROJEKTY`), miniatury leżą w `galeria/`.
