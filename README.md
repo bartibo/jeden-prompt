@@ -16,14 +16,17 @@ Stały dopisek po zdaniu z pomysłem:
 
 > Ty podejmujsze wszystkie decyzje. Projekt ma być super i dać się odpalić w przeglądarce. O nic mnie nie pytaj tylko stwórz gotowy projekty. (Umieść go w folderze …)
 
+Od dnia 3 nazwę folderu wybiera model („Umieść go w folderze dedykowanym i nazwij go zgodnie z konwencją nazewnictwa stosowaną we wczesniejszych projektach.”).
+
 Prompty są cytowane dosłownie, z oryginalną pisownią i literówkami.
 
 ## Projekty
 
 | # | Data | Projekt | Zdanie z pomysłem | Model | Czas pracy modelu |
-|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- |
 | 1 | pon. 19.10.2026 | [Tarcza Ziemi](1-meteoryty-gra-opus5_5/) – gra w obronę Ziemi przed meteorytami | „Stwórz proszę grę w któej gracz ma za zadanie obronić ziemię przed spadającymi metorytami.” | Claude Opus 5.5 | ok. 35 min |
 | 2 | wt. 20.10.2026 | [Sejsmo·Lab](2-trzesienie-ziemi-interaktywne-opus5_5/) – symulator trzęsień ziemi 3D | „Stwórz proszę interaktywną animacją 3D, w które gracz może testować różne wielkości trzesięnia ziemi w taki spośób by zobaczył efekt trzęsienia ziemi zależny od siły zjawiska.” | Claude Opus 5.5 | ok. 75 min |
+| 3 | śr. 21.10.2026 | [Kapibara Kombat](3-kapibary-bijatyka-opus5_5/) – bijatyka kapibar dla 2 graczy na jednej klawiaturze | „Stwórz proszę grę typu street fighter / mortal kombat w której dwie kapybary walczą między sobą, a gracze grają na jednej klawaiturze i mają bardzo dużo ciosów i combo do wykorzsytania.” | Claude Opus 5.5 | ok. 60 min |
 
 Pełny prompt, godzina i szczegóły są w README każdego projektu.
 

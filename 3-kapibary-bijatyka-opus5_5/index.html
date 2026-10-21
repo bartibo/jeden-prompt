@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#120a06">
+  <title>Kapibara Kombat</title>
+  <meta name="description" content="Bijatyka dla dwóch graczy na jednej klawiaturze. Cztery kapibary, dziesiątki ciosów, combosy, super ciosy i Kapibality.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23ff8a2a'/%3E%3Cpath d='M12 34c0-12 10-20 24-20 9 0 16 5 17 13 1 6-2 12-8 14-6 2-12 1-17 3-7 3-16-1-16-10z' fill='%23a8743f' stroke='%2324140a' stroke-width='2.5'/%3E%3Ccircle cx='34' cy='24' r='2.6' fill='%2324140a'/%3E%3Cellipse cx='49' cy='27' rx='4' ry='3' fill='%234a2c1a'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="in-menu">
+  <canvas id="game"></canvas>
+
+  <!-- ============ EKRAN TYTUŁOWY ============ -->
+  <section class="screen" id="scr-title">
+    <div class="logo">
+      <div class="logo-top">KAPIBARA</div>
+      <div class="logo-bottom">KOMBAT</div>
+      <div class="logo-sub">Bagienne Mistrzostwa Świata w Spokojnym Mordobiciu</div>
+    </div>
+    <div class="press">Naciśnij <kbd>Enter</kbd> albo kliknij</div>
+    <div class="title-foot">Dwóch graczy na jednej klawiaturze · 4 kapibary · ponad 80 ciosów</div>
+  </section>
+
+  <!-- ============ MENU GŁÓWNE ============ -->
+  <section class="screen" id="scr-menu">
+    <div class="logo small">
+      <div class="logo-top">KAPIBARA</div>
+      <div class="logo-bottom">KOMBAT</div>
+    </div>
+    <nav class="menu-list">
+      <button class="btn big" data-act="versus">Walka 2 graczy <small>jedna klawiatura</small></button>
+      <button class="btn big" data-act="cpu">Walka z komputerem</button>
+      <button class="btn big" data-act="training">Trening</button>
+      <button class="btn" data-act="movelist">Lista ciosów i combosów</button>
+      <button class="btn" data-act="controls">Sterowanie</button>
+      <button class="btn" data-act="options">Opcje</button>
+    </nav>
+    <div class="menu-hint"><kbd>↑</kbd><kbd>↓</kbd> wybór · <kbd>Enter</kbd> zatwierdź · <kbd>Esc</kbd> wróć</div>
+  </section>
+
+  <!-- ============ WYBÓR POSTACI ============ -->
+  <section class="screen" id="scr-select">
+    <h1 class="scr-title" id="sel-title">Wybierz kapibarę</h1>
+    <div class="sel-row" id="sel-cards"></div>
+    <div class="sel-panels">
+      <div class="sel-panel" id="sel-p1"></div>
+      <div class="sel-vs">VS</div>
+      <div class="sel-panel" id="sel-p2"></div>
+    </div>
+    <div class="sel-stage" id="sel-stage" hidden>
+      <h2>Wybierz arenę</h2>
+      <div class="stage-row" id="stage-cards"></div>
+    </div>
+    <div class="menu-hint" id="sel-hint"></div>
+  </section>
+
+  <!-- ============ LISTA CIOSÓW ============ -->
+  <section class="screen" id="scr-movelist">
+    <h1 class="scr-title">Lista ciosów</h1>
+    <div class="tabs" id="ml-tabs"></div>
+    <div class="ml-keys" id="ml-keys"></div>
+    <div class="ml-body" id="ml-body"></div>
+    <div class="menu-hint"><kbd>←</kbd><kbd>→</kbd> zmień postać · <kbd>Esc</kbd> wróć</div>
+  </section>
+
+  <!-- ============ STEROWANIE ============ -->
+  <section class="screen" id="scr-controls">
+    <h1 class="scr-title">Sterowanie</h1>
+    <div class="ctrl-grid" id="ctrl-grid"></div>
+    <div class="ctrl-notes">
+      <p><b>Kierunki są względem twojej kapibary:</b> „→” znaczy „do rywala”, „←” – „od rywala”. Gdy postacie zamienią się stronami, zamieniają się też kierunki.</p>
+      <p><b>Blok:</b> trzymaj kierunek od rywala. Stojąc blokujesz ciosy z góry i średnie, kucając – niskie i średnie.</p>
+      <p><b>Ruchy specjalne</b> (np. <span class="inp">↓↘→+Ł</span>): przeciągnij kierunki po kolei, a na końcu naciśnij przycisk. Gra wybacza pominięcie skosu.</p>
+      <p><b>Uwaga na klawiaturę:</b> wiele klawiatur nie rejestruje więcej niż 3–4 klawiszy naraz. Jeśli jakiś cios „nie wchodzi”, spróbuj klawiszy z klawiatury numerycznej dla gracza 2.</p>
+    </div>
+    <div class="menu-hint"><kbd>Esc</kbd> wróć</div>
+  </section>
+
+  <!-- ============ OPCJE ============ -->
+  <section class="screen" id="scr-options">
+    <h1 class="scr-title">Opcje</h1>
+    <div class="opt-list" id="opt-list"></div>
+    <div class="menu-hint"><kbd>↑</kbd><kbd>↓</kbd> wybór · <kbd>←</kbd><kbd>→</kbd> lub <kbd>Enter</kbd> zmiana · <kbd>Esc</kbd> wróć</div>
+  </section>
+
+  <!-- ============ PAUZA ============ -->
+  <section class="screen overlay" id="scr-pause">
+    <div class="pause-box">
+      <h1 class="scr-title">Pauza</h1>
+      <nav class="menu-list">
+        <button class="btn" data-act="resume">Wróć do walki</button>
+        <button class="btn" data-act="pmovelist">Lista ciosów</button>
+        <button class="btn" data-act="pcontrols">Sterowanie</button>
+        <button class="btn" data-act="restart">Zacznij walkę od nowa</button>
+        <button class="btn" data-act="quit">Wyjdź do menu</button>
+      </nav>
+    </div>
+  </section>
+
+  <!-- ============ WYNIKI ============ -->
+  <section class="screen overlay" id="scr-results">
+    <div class="res-box">
+      <canvas id="res-canvas" width="360" height="360"></canvas>
+      <div class="res-info">
+        <div class="res-label">Zwycięzca</div>
+        <div class="res-name" id="res-name"></div>
+        <div class="res-quote" id="res-quote"></div>
+        <table class="res-stats" id="res-stats"></table>
+        <nav class="menu-list row">
+          <button class="btn" data-act="rematch">Rewanż</button>
+          <button class="btn" data-act="reselect">Wybór postaci</button>
+          <button class="btn" data-act="quit">Menu</button>
+        </nav>
+      </div>
+    </div>
+  </section>
+
+  <div id="toast"></div>
+
+  <script src="js/util.js"></script>
+  <script src="js/input.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/rig.js"></script>
+  <script src="js/fx.js"></script>
+  <script src="js/moves.js"></script>
+  <script src="js/fighter.js"></script>
+  <script src="js/characters.js"></script>
+  <script src="js/finishers.js"></script>
+  <script src="js/stage.js"></script>
+  <script src="js/ai.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
