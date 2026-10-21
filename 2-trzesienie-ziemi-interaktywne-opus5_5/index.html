@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>Sejsmo·Lab – symulator trzęsień ziemi 3D</title>
+  <meta name="description" content="Interaktywny symulator trzęsienia ziemi w 3D. Ustaw magnitudę i zobacz, co dzieje się z miastem.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <canvas id="view"></canvas>
+  <div id="vignette"></div>
+  <div id="flash"></div>
+
+  <!-- Marka -->
+  <header class="brand">
+    <div class="logo" aria-hidden="true">
+      <svg viewBox="0 0 40 40"><path d="M2 22 L9 22 L12 12 L16 32 L20 6 L24 30 L27 18 L30 22 L38 22" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/></svg>
+    </div>
+    <div>
+      <h1>Sejsmo<span>·</span>Lab</h1>
+      <p>Interaktywny symulator trzęsień ziemi</p>
+    </div>
+  </header>
+
+  <!-- Pasek narzędzi -->
+  <nav class="toolbar" id="toolbar">
+    <div class="seg" id="todSeg" title="Pora dnia (T)">
+      <button data-tod="day">☀ Dzień</button>
+      <button data-tod="sunset" class="on">🌇 Zachód</button>
+      <button data-tod="night">🌙 Noc</button>
+    </div>
+    <div class="seg" id="viewSeg" title="Widoki kamery (1–5)">
+      <button data-view="0" title="Panorama (1)">Panorama</button>
+      <button data-view="1" title="Centrum (2)">Centrum</button>
+      <button data-view="2" title="Ulica (3)">Ulica</button>
+      <button data-view="3" title="Wybrzeże (4)">Wybrzeże</button>
+      <button data-view="4" title="Z góry (5)">Z góry</button>
+    </div>
+    <div class="seg toggles">
+      <button id="tSlow" title="Zwolnione tempo (S)">🐢 <span>Zwolnij</span></button>
+      <button id="tAuto" title="Kamera krąży wokół miasta (C)">🎥 <span>Obrót</span></button>
+      <button id="tShake" class="on" title="Kamera drży razem z gruntem (K)">📳 <span>Drżenie</span></button>
+      <button id="tSound" class="on" title="Dźwięk (M)">🔊</button>
+      <button id="tHelp" title="Pomoc (H)">?</button>
+    </div>
+  </nav>
+
+  <!-- Panel sterowania -->
+  <aside class="panel left" id="panel">
+    <button class="sheet-toggle" id="panelToggle">⚙ Parametry trzęsienia</button>
+    <div class="panel-body">
+      <section class="mag-box">
+        <div class="row-between">
+          <span class="label">Magnituda (siła)</span>
+          <span class="chip" id="magClass">Silne</span>
+        </div>
+        <div class="mag-value"><small>M</small><b id="magVal">6,6</b></div>
+        <input type="range" id="mag" min="1" max="9.5" step="0.1" value="6.6" aria-label="Magnituda">
+        <div class="ticks"><span>1</span><span>3</span><span>5</span><span>7</span><span>9</span></div>
+        <p class="hint">Każdy stopień więcej to <b>10×</b> większe drgania i ok. <b>32×</b> więcej energii.</p>
+      </section>
+
+      <section>
+        <div class="row-between"><span class="label">Głębokość ogniska</span><b class="val" id="depthVal">12 km</b></div>
+        <input type="range" id="depth" min="2" max="100" step="1" value="12" aria-label="Głębokość">
+        <div class="row-between"><span class="label">Odległość od epicentrum</span><b class="val" id="distVal">8 km</b></div>
+        <input type="range" id="dist" min="0" max="160" step="1" value="8" aria-label="Odległość">
+      </section>
+
+      <section>
+        <span class="label">Podłoże pod miastem</span>
+        <div class="seg full" id="soilSeg">
+          <button data-soil="rock">Skała</button>
+          <button data-soil="stiff" class="on">Grunt zwięzły</button>
+          <button data-soil="soft">Miękkie osady</button>
+        </div>
+        <span class="label">Epicentrum</span>
+        <div class="seg full" id="seaSeg">
+          <button data-sea="0" class="on">⛰ Pod lądem</button>
+          <button data-sea="1">🌊 Pod morzem</button>
+        </div>
+      </section>
+
+      <section>
+        <span class="label">Szybki wybór</span>
+        <div class="chips" id="scenarios"></div>
+        <select id="historic" aria-label="Historyczne trzęsienia ziemi">
+          <option value="">📜 Historyczne trzęsienia ziemi…</option>
+        </select>
+        <div class="note" id="histNote" hidden></div>
+      </section>
+
+      <div class="row2">
+        <button class="ghost" id="rebuild">↺ Odbuduj miasto <kbd>R</kbd></button>
+        <button class="ghost" id="tAfter" title="Po silnym wstrząsie przychodzą słabsze wstrząsy wtórne (A)">✓ Wstrząsy wtórne</button>
+      </div>
+    </div>
+    <div class="panel-foot">
+      <button class="go" id="go"><span class="go-pulse"></span>Wywołaj trzęsienie <kbd>Spacja</kbd></button>
+    </div>
+  </aside>
+
+  <!-- Panel informacji -->
+  <aside class="panel right" id="info">
+    <button class="sheet-toggle" id="infoToggle">ℹ Prognoza i raport</button>
+    <div class="panel-body">
+      <section class="forecast">
+        <span class="label" id="fcTitle">Prognoza dla miasta</span>
+        <div class="mmi-big" id="fcMMI"><b>VIII</b><div><span class="mmi-name">Niszczące</span><small>intensywność w skali Mercallego</small></div></div>
+        <p class="mmi-text" id="fcText"></p>
+        <dl class="stats">
+          <div><dt>Przyspieszenie gruntu</dt><dd id="fcPGA">–</dd></div>
+          <div><dt>Uwolniona energia</dt><dd id="fcEnergy">–</dd></div>
+          <div><dt>Pęknięcie uskoku</dt><dd id="fcRupture">–</dd></div>
+          <div><dt>Silne drgania trwają</dt><dd id="fcDur">–</dd></div>
+          <div><dt>Fala P / fala S po</dt><dd id="fcWaves">–</dd></div>
+          <div><dt>Takich wstrząsów na świecie</dt><dd id="fcYear">–</dd></div>
+          <div id="fcTsuRow"><dt>Tsunami</dt><dd id="fcTsu">–</dd></div>
+        </dl>
+      </section>
+
+      <section class="live" id="live" hidden>
+        <div class="row-between"><span class="label">Na żywo</span><span class="timer" id="liveTime">0,0 s</span></div>
+        <div class="phase" id="livePhase">–</div>
+        <div class="live-grid">
+          <div><small>Intensywność teraz</small><b id="liveI">I</b></div>
+          <div><small>Przyspieszenie</small><b id="livePGA">0,00 g</b></div>
+          <div><small>Zawalone</small><b id="liveCol">0</b></div>
+        </div>
+      </section>
+
+      <section class="report" id="report" hidden>
+        <div class="row-between"><span class="label">Raport szkód</span><button class="x" id="reportClose" aria-label="Zamknij">×</button></div>
+        <h3 id="repTitle">–</h3>
+        <div class="bar" id="repBar"></div>
+        <div class="legend">
+          <span><i style="background:#6ee7a0"></i>bez szkód</span>
+          <span><i style="background:#ffd23f"></i>lekkie</span>
+          <span><i style="background:#ff9330"></i>poważne</span>
+          <span><i style="background:#ff4b4b"></i>zawalone</span>
+        </div>
+        <table class="rep-table" id="repTable"></table>
+        <ul class="rep-extra" id="repExtra"></ul>
+        <p class="rep-comment" id="repComment"></p>
+      </section>
+    </div>
+  </aside>
+
+  <!-- Dół: skala Mercallego i sejsmogram -->
+  <footer class="hud" id="hud">
+    <div class="mmi-bar" id="mmiBar"><div class="mmi-peak" id="mmiPeak"></div><div class="mmi-now" id="mmiNow"></div></div>
+    <div class="seismo">
+      <canvas id="seismo"></canvas>
+      <div class="seismo-label"><span>SEJSMOGRAM · stacja „Centrum”</span><span id="seismoAmp">PGA 0,000 g</span></div>
+    </div>
+  </footer>
+
+  <div class="tooltip" id="tooltip" hidden></div>
+  <div class="toasts" id="toasts"></div>
+  <div class="phase-banner" id="banner" hidden></div>
+
+  <!-- Ekran powitalny -->
+  <div class="overlay" id="intro">
+    <div class="card">
+      <div class="logo big" aria-hidden="true">
+        <svg viewBox="0 0 40 40"><path d="M2 22 L9 22 L12 12 L16 32 L20 6 L24 30 L27 18 L30 22 L38 22" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/></svg>
+      </div>
+      <h2>Sejsmo·Lab</h2>
+      <p class="lead">Nadmorskie miasto stoi na uskoku tektonicznym. Ty decydujesz, jak silnie zatrzęsie się ziemia.</p>
+      <ol>
+        <li><b>Ustaw magnitudę</b> od 1 (nieodczuwalne) do 9,5 (najsilniejsze w historii). Możesz też zmienić głębokość, odległość i rodzaj gruntu.</li>
+        <li><b>Wywołaj trzęsienie</b> przyciskiem albo <kbd>Spacją</kbd>. Najpierw przyjdzie fala P, potem silniejsza fala S, a przy dużych wstrząsach fale powierzchniowe.</li>
+        <li><b>Obserwuj miasto.</b> Lewy przycisk myszy obraca widok, prawy go przesuwa, a kółko przybliża. Najedź na budynek, żeby zobaczyć jego stan.</li>
+      </ol>
+      <p class="tip">Wskazówka: ustaw epicentrum <b>pod morzem</b> i magnitudę powyżej 8, a potem przełącz kamerę na <b>Wybrzeże</b>.</p>
+      <button class="go" id="start">Zaczynamy</button>
+      <p class="loading" id="loading">Budowanie miasta…</p>
+    </div>
+  </div>
+
+  <div class="overlay" id="help" hidden>
+    <div class="card help">
+      <button class="x" id="helpClose" aria-label="Zamknij">×</button>
+      <h2>Sterowanie</h2>
+      <table>
+        <tr><td><kbd>Spacja</kbd></td><td>wywołaj trzęsienie (kolejne nałoży się na trwające)</td></tr>
+        <tr><td><kbd>↑</kbd> <kbd>↓</kbd></td><td>magnituda ±0,1 (z <kbd>Shift</kbd> ±0,5)</td></tr>
+        <tr><td><kbd>R</kbd></td><td>odbuduj miasto</td></tr>
+        <tr><td><kbd>1</kbd>–<kbd>5</kbd></td><td>widoki kamery</td></tr>
+        <tr><td><kbd>T</kbd></td><td>pora dnia</td></tr>
+        <tr><td><kbd>S</kbd></td><td>zwolnione tempo</td></tr>
+        <tr><td><kbd>C</kbd> / <kbd>K</kbd></td><td>obrót kamery / drżenie kamery</td></tr>
+        <tr><td><kbd>A</kbd></td><td>wstrząsy wtórne wł./wył.</td></tr>
+        <tr><td><kbd>M</kbd></td><td>dźwięk</td></tr>
+        <tr><td>Mysz</td><td>lewy – obrót, prawy (lub Shift) – przesuwanie, kółko – przybliżenie</td></tr>
+      </table>
+      <h3>Jak to działa</h3>
+      <p><b>Magnituda</b> mówi, ile energii uwolniło się w ognisku. <b>Intensywność</b> (skala Mercallego I–XII) opisuje skutki w konkretnym miejscu. Zależy od magnitudy, odległości, głębokości i gruntu: miękkie osady wzmacniają drgania i mogą ulec upłynnieniu.</p>
+      <p>Każdy budynek ma własny okres drgań i odporność. Kamienice z niezbrojonej cegły padają pierwsze. Wieżowiec z tłumikiem masowym kołysze się, ale wytrzymuje bardzo silne wstrząsy.</p>
+      <p class="small">Wzory są uproszczone (Atkinson &amp; Wald 2007, Wald i in. 1999, Wells &amp; Coppersmith 1994), a ruch gruntu jest przesadzony, żeby było go widać. To model edukacyjny, a nie prognoza.</p>
+    </div>
+  </div>
+
+  <script src="lib/three.min.js"></script>
+  <script src="js/util.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/quake.js"></script>
+  <script src="js/world.js"></script>
+  <script src="js/city.js"></script>
+  <script src="js/fx.js"></script>
+  <script src="js/seismo.js"></script>
+  <script src="js/controls.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
