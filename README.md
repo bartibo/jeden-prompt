@@ -29,6 +29,7 @@ Prompty są cytowane dosłownie, z oryginalną pisownią i literówkami.
 | 1 | pon. 19.10.2026 | [Tarcza Ziemi](1-meteoryty-gra-opus5_5/) – gra w obronę Ziemi przed meteorytami | „Stwórz proszę grę w któej gracz ma za zadanie obronić ziemię przed spadającymi metorytami.” | Claude Opus 5.5 | ok. 35 min |
 | 2 | wt. 20.10.2026 | [Sejsmo·Lab](2-trzesienie-ziemi-interaktywne-opus5_5/) – symulator trzęsień ziemi 3D | „Stwórz proszę interaktywną animacją 3D, w które gracz może testować różne wielkości trzesięnia ziemi w taki spośób by zobaczył efekt trzęsienia ziemi zależny od siły zjawiska.” | Claude Opus 5.5 | ok. 75 min |
 | 3 | śr. 21.10.2026 | [Kapibara Kombat](3-kapibary-bijatyka-opus5_5/) – bijatyka kapibar dla 2 graczy na jednej klawiaturze | „Stwórz proszę grę typu street fighter / mortal kombat w której dwie kapybary walczą między sobą, a gracze grają na jednej klawaiturze i mają bardzo dużo ciosów i combo do wykorzsytania.” | Claude Opus 5.5 | ok. 60 min |
+| 4 | czw. 22.10.2026 | [Oczami innych](4-zaburzenia-wzroku-symulator-opus5_5/) – symulator zaburzeń wzroku (krótkowzroczność, astygmatyzm, daltonizm, zaćma i ponad 20 innych) | „Stwórz proszę aplikację, która będzie pokazywała i wyjaśniała w jaki sposób świat widzą osoby z różnymi zaburzeniami wzroku np krótkowidze, dalekowidze, osoby z zezem, osoby z astygmatyzmem, daltonizmem i innymi nie wymienionymi.” | Claude Opus 5.5 | ok. 70 min |
 
 Pełny prompt, godzina i szczegóły są w README każdego projektu.
 
