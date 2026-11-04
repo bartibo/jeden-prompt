@@ -8,6 +8,8 @@ Aplikacja ma dwa kolory: zielony i czerwony. Reszta jest czarno-biała (w trybie
 
 Dzień 13 eksperymentu [1 prompt, 1 zdanie](../README.md): jeden prompt, zero poprawek.
 
+Osobna czynność po eksperymencie (nie prompt, nie poprawka aplikacji, nie wliczana w czas pracy): na górze strony dopisano ostrzeżenie, że to aplikacja pokazowa i nie służy do sprawdzania linków.
+
 - **Data:** środa, 04.11.2026, godz. 10:36
 - **Model:** Claude Opus 5.5 (`claude-opus-5-5`) w Claude Code
 - **Czas pracy modelu:** ok. 20 minut
